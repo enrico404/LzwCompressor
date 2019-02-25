@@ -1,0 +1,8 @@
+Metadata-Version: 1.0
+Name: LzwCompressor
+Version: 1.0
+Summary: Lempel Ziv Welch compressor and decompressor
+Home-page: https://github.com/enrico404
+Author: Sedoni Enrico
+Author-email: sedoni.enrico@gmail.com
+License: MIT
