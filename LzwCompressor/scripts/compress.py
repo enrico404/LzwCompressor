@@ -15,7 +15,7 @@ Permette l'utilizzo di diverse opzioni:
                  siccome ne va ad aumentare la dimensione
 
     SYNOPSIS:
-    compress.py [ -v ] [ -r ] [ -h ] [file ...]
+    compress.py [ -v ] [ -r ] [ -h ] [ file ... ]
 
 @author: Sedoni Enrico
 

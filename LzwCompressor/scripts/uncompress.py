@@ -13,7 +13,7 @@ Permette l'utilizzo di diverse opzioni:
     -h : help sull'utilizzo del comando
 
     SYNOPSIS:
-    uncompress.py [-r] [ -h ] [file ...]
+    uncompress.py [ -r ] [ -h ] [ file ... ]
 
 @author: Sedoni Enrico
 '''

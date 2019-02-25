@@ -4,8 +4,6 @@ from LzwCompressor.utils import ValueError as exc3
 import os
 import shutil
 import stat
-import sys
-import struct
 import math
 
 '''
@@ -53,7 +51,7 @@ class LzwCompressor():
         flag_enc = False
         #se il file è già compresso esco
         
-        if os.path.basename(file_path).split('.')[1] == 'Z':
+        if file_path.endswith('.Z'):
             print("Il file:",file_path, "è già compresso")
             return False
         try:
@@ -68,9 +66,9 @@ class LzwCompressor():
             raise exc2.UnsupportedEncoding
         
       
-        #recupero il nome del file
-        name = os.path.basename(file_path).split('.')[0]
-        compress_file_name = name+'.Z'
+        
+        #appendo alla fine del nome l'estenzione '.Z'
+        compress_file_name = file_path+'.Z'
         #apro il file in modalità binaria
         fout = open(compress_file_name, "wb")
         #copio i permessi del file in quello nuovo
@@ -140,15 +138,13 @@ class LzwCompressor():
         dictionary = {i: chr(i) for i in range(self.dict_initial_size-1)}
         dictionary[self.dict_initial_size] = '\n'
         self.input_file.clear()
-        #recupero il nome del file
-        name = os.path.basename(file_path).split('.')[0]
+        
         #se è già un file decompresso non ha senso provare a decomprimere,
         #  deve essere quindi di estensione .Z per procedere
-        if os.path.basename(file_path).split('.')[1] == 'Z':
+        if file_path.endswith('.Z'):
             with open(file_path, 'rb') as f:
                data = f.read()
-            
-            uncompress_file_name = name+'.txt'
+            uncompress_file_name = file_path[0:(len(file_path)-2)]
             #apro il file in modalità scrittura
             fdcomp = open(uncompress_file_name, "w")
             #copio i permessi del file in quello nuovo
