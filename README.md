@@ -22,6 +22,7 @@ Procedura di installazione:
 NB: l'installazione richiede i permessi di amministratore
 
 Come si usa l'applicazione:
+
 	compressione:
 		compress.py [ -v ] [ -r ] [ -h ] [file ...]
 
