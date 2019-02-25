@@ -3,17 +3,21 @@ Progetto per il corso di linguaggi dinamici.
 Sedoni Enrico. Matr: 108801
 
 
-Nome progetto: Lempel Ziv Welch Compressor (LzwCompressor)
+Nome progetto: 
+
+	Lempel Ziv Welch Compressor (LzwCompressor)
 
 Descrizione:
+
 	semplice compressore lossless (senza perdita di dati) che utilizza 
 	l'algoritmo ideato da Lempel, Ziv e Welch.
 
-Requisiti per l'utilizzo:
+Requisiti di sistema:
+	- Linux
 	- python3
 
 Procedura di installazione:
-	- estrarre l'archivio compresso "LzwCompressor1_0.tar.gz"
+
 	- aprire un terminale all'interno della directory
 	- digitare i seguenti comandi:
 		- chmod u+x setup.py
