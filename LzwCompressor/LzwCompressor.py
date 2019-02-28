@@ -51,14 +51,12 @@ class LzwCompressor():
         flag_enc = False
         #se il file è già compresso esco.
         
-        if file_path.endswith('.Z'):
-            print("Il file:",file_path, "è già compresso")
-            return False
+      
         try:
-            with open(file_path) as f:
-                for lines in f.readlines():
-                    for c in lines:
-                        self.input_file.append(c)
+            with open(file_path, 'rb') as f:
+                data = f.read()
+            for i in data:
+                self.input_file.append(chr(i))
         except UnicodeDecodeError:
             flag_enc = True
          
