@@ -15,6 +15,7 @@ Sedoni Enrico. Matr: 108801
 ## Requisiti di sistema:
 	- Linux
 	- python3
+	- python3-pip
 
 ## Procedura di installazione:
 

@@ -4,8 +4,6 @@ from LzwCompressor.utils import ValueError as exc3
 import os
 import shutil
 import stat
-import sys
-import struct
 import math
 
 '''
@@ -148,7 +146,7 @@ class LzwCompressor():
                data = f.read()
             uncompress_file_name = file_path[0:(len(file_path)-2)]
             #apro il file in modalità scrittura
-            fdcomp = open(uncompress_file_name, "w")
+            fdcomp = open(uncompress_file_name, "wb")
             #copio i permessi del file in quello nuovo
             shutil.copystat(file_path, uncompress_file_name)
             file_stat = os.stat(file_path)
@@ -161,7 +159,7 @@ class LzwCompressor():
             self.input_file.append(int.from_bytes(data[2: j], 'big'))
          
             s = chr(self.input_file.pop(0))
-            fdcomp.write(s)
+            fdcomp.write(s.to_bytes(1,'big'))
             for c in self.input_file:
                 if c in dictionary:
                     new_value = dictionary[c]
@@ -177,7 +175,7 @@ class LzwCompressor():
                 dictionary[counter] = s+new_value[0]
                 s = new_value
                 counter += 1
-                fdcomp.write(new_value)
+                fdcomp.write(new_value.to_bytes(1,'big'))
                 #vado a leggere il prossimo dato dal file compresso e lo inserisco nell'array
                 #del file di input
                 k = j+ math.ceil(self.__lg(counter-2)/8)
