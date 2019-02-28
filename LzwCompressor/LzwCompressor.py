@@ -49,7 +49,7 @@ class LzwCompressor():
         dictionary['END'] = self.dict_initial_size
         self.input_file.clear()
         flag_enc = False
-        #se il file è già compresso esco
+        #se il file è già compresso esco.
         
         if file_path.endswith('.Z'):
             print("Il file:",file_path, "è già compresso")
