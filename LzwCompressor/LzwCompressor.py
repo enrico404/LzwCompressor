@@ -146,7 +146,7 @@ class LzwCompressor():
                data = f.read()
             uncompress_file_name = file_path[0:(len(file_path)-2)]
             #apro il file in modalità scrittura
-            fdcomp = open(uncompress_file_name, "wb")
+            fdcomp = open(uncompress_file_name, "w")
             #copio i permessi del file in quello nuovo
             shutil.copystat(file_path, uncompress_file_name)
             file_stat = os.stat(file_path)
