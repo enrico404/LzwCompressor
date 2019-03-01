@@ -5,6 +5,7 @@ import os
 import shutil
 import stat
 import math
+import codecs
 
 '''
 @author: Sedoni Enrico
@@ -49,21 +50,25 @@ class LzwCompressor():
         dictionary['END'] = self.dict_initial_size
         self.input_file.clear()
         flag_enc = False
-        #se il file è già compresso esco
+      
         
-        if file_path.endswith('.Z'):
-            print("Il file:",file_path, "è già compresso")
-            return False
+      
         try:
-            with open(file_path) as f:
-                for lines in f.readlines():
-                    for c in lines:
-                        self.input_file.append(c)
-        except UnicodeDecodeError:
-            flag_enc = True
-         
-        if flag_enc:
-            raise exc2.UnsupportedEncoding
+            with (codecs.open(file_path, 'rb', 'utf-8')) as f:
+                data = f.read()
+            for i in data:
+                self.input_file.append(i)
+            
+        except:
+            with (codecs.open(file_path, 'rb')) as f:
+                data = f.read()
+            for i in data:
+                self.input_file.append(chr(i))
+        
+
+        
+      #  if flag_enc:
+       #     raise exc2.UnsupportedEncoding
         
       
         
@@ -134,8 +139,10 @@ class LzwCompressor():
         dizionario utilizzato per la compressione.
         '''
         counter = self.dict_initial_size + 1
+        
         #in questo caso ho il dizionario invertito, la chiave è il codice
-        dictionary = {i: chr(i) for i in range(self.dict_initial_size-1)}
+        dictionary = {i: chr(i) for i in range(self.dict_initial_size)}
+        
         dictionary[self.dict_initial_size] = '\n'
         self.input_file.clear()
         
@@ -158,8 +165,9 @@ class LzwCompressor():
             self.input_file.append(int.from_bytes(data[0:2], 'big'))
             self.input_file.append(int.from_bytes(data[2: j], 'big'))
          
-            s = chr(self.input_file.pop(0))
-            fdcomp.write(s.to_bytes(1,'big'))
+            val = self.input_file.pop(0)
+            s = chr(val)
+            fdcomp.write(val.to_bytes(1, 'big'))
             for c in self.input_file:
                 if c in dictionary:
                     new_value = dictionary[c]
@@ -175,7 +183,8 @@ class LzwCompressor():
                 dictionary[counter] = s+new_value[0]
                 s = new_value
                 counter += 1
-                fdcomp.write(new_value.to_bytes(1,'big'))
+                for i in new_value:
+                    fdcomp.write(ord(i).to_bytes(1, 'big'))
                 #vado a leggere il prossimo dato dal file compresso e lo inserisco nell'array
                 #del file di input
                 k = j+ math.ceil(self.__lg(counter-2)/8)
@@ -184,8 +193,9 @@ class LzwCompressor():
                     break
                 self.input_file.append(val)
                 j = k    
-            fdcomp.write(dictionary[self.dict_initial_size])
+            fdcomp.write(ord(dictionary[self.dict_initial_size]).to_bytes(1,'big'))
             fdcomp.close()
+            
             return True
         return False
                 
