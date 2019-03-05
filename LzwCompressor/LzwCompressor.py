@@ -6,6 +6,7 @@ import shutil
 import stat
 import math
 
+
 '''
 @author: Sedoni Enrico
 '''
@@ -44,29 +45,28 @@ class LzwCompressor():
         spazio e anche perchè il file compresso non deve venir letto dall'utente
         '''
         old_size = os.path.getsize(file_path)
-        counter = self.dict_initial_size
+        counter = self.dict_initial_size 
         dictionary = {chr(i): i for i in range(self.dict_initial_size)}
         dictionary['END'] = self.dict_initial_size
         self.input_file.clear()
         flag_enc = False
-        #se il file è già compresso esco
-        
-        if file_path.endswith('.Z'):
-            print("Il file:",file_path, "è già compresso")
-            return False
+        #provo prima ad aprirlo come file testuale, se genera eccezione vuol dire che
+        #è un altro tipo di file e lo apro in modalità binaria
         try:
-            with open(file_path) as f:
-                for lines in f.readlines():
-                    for c in lines:
-                        self.input_file.append(c)
-        except UnicodeDecodeError:
-            flag_enc = True
-         
-        if flag_enc:
-            raise exc2.UnsupportedEncoding
-        
-      
-        
+            with open(file_path, 'r', 'latin-1') as f:
+                data = f.read()
+            for i in data:
+                self.input_file.append(i)
+        except:
+            with open(file_path, 'rb') as f:
+                data = f.read()
+            for i in data:
+                self.input_file.append(chr(i))
+            
+          
+      #  if flag_enc:
+       #     raise exc2.UnsupportedEncoding
+   
         #appendo alla fine del nome l'estenzione '.Z'
         compress_file_name = file_path+'.Z'
         #apro il file in modalità binaria
@@ -92,7 +92,7 @@ class LzwCompressor():
                     s = c
                     sc = None 
             #se l'ultima combinazione di caratteri è una già nel dizionario, devo scriverla sul file
-            if sc != None:
+            if sc != None:  
                 p = dictionary[sc]
                 fout.write(p.to_bytes(nbytes, 'big')) 
         except:
@@ -133,9 +133,11 @@ class LzwCompressor():
         Per la decompressione l'unica informazione da conoscere in partenza è la dimensione del 
         dizionario utilizzato per la compressione.
         '''
-        counter = self.dict_initial_size + 1
+        counter = self.dict_initial_size +1
+        
         #in questo caso ho il dizionario invertito, la chiave è il codice
-        dictionary = {i: chr(i) for i in range(self.dict_initial_size-1)}
+        dictionary = {i: chr(i) for i in range(self.dict_initial_size)}
+        
         dictionary[self.dict_initial_size] = '\n'
         self.input_file.clear()
         
@@ -144,9 +146,10 @@ class LzwCompressor():
         if file_path.endswith('.Z'):
             with open(file_path, 'rb') as f:
                data = f.read()
+            #recupero nome del file togliendo l'estensione '.Z'
             uncompress_file_name = file_path[0:(len(file_path)-2)]
-            #apro il file in modalità scrittura
-            fdcomp = open(uncompress_file_name, "w")
+            #apro il file in modalità scrittura binaria
+            fdcomp = open(uncompress_file_name, "wb")
             #copio i permessi del file in quello nuovo
             shutil.copystat(file_path, uncompress_file_name)
             file_stat = os.stat(file_path)
@@ -157,35 +160,45 @@ class LzwCompressor():
             j = 2+math.ceil(self.__lg(counter)/8)
             self.input_file.append(int.from_bytes(data[0:2], 'big'))
             self.input_file.append(int.from_bytes(data[2: j], 'big'))
-         
-            s = chr(self.input_file.pop(0))
-            fdcomp.write(s)
-            for c in self.input_file:
-                if c in dictionary:
-                    new_value = dictionary[c]
+            
+            val = self.input_file.pop(0)
+            s = chr(val)
+            fdcomp.write(val.to_bytes(1, 'big'))
+            for code in self.input_file:
+                if code in dictionary:
+                    new_value = dictionary[code]
                 #caso speciale in cui incontro come primo carattere già uno codificato 
                 # es: file compresso: 65 257 ... quindi il caso in cui ho tre caratteri 
                 # uguali all'inizio del file compresso
-                elif c == counter:
+                elif code == counter:
                     new_value = s+s[0]
                     
                 else:
+              
                     raise exc.BadCompression
                 
                 dictionary[counter] = s+new_value[0]
+                #print("inserito nel dizionario: ", dictionary[counter])
                 s = new_value
                 counter += 1
-                fdcomp.write(new_value)
+                for i in new_value:
+                    fdcomp.write(ord(i).to_bytes(1, 'big'))
+                
                 #vado a leggere il prossimo dato dal file compresso e lo inserisco nell'array
                 #del file di input
-                k = j+ math.ceil(self.__lg(counter-2)/8)
+               
+                k = j+ math.ceil(self.__lg(counter+1)/8)
+               
+                
                 val = int.from_bytes(data[j: k], 'big')
+            
                 if val == self.dict_initial_size:
                     break
                 self.input_file.append(val)
                 j = k    
-            fdcomp.write(dictionary[self.dict_initial_size])
+            fdcomp.write(ord(dictionary[self.dict_initial_size]).to_bytes(1,'big'))
             fdcomp.close()
+            
             return True
         return False
                 
