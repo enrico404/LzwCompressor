@@ -36,6 +36,12 @@ class LzwCompressor():
         else: 
             return (math.floor(math.log(x, 2))+1)
 
+    def __createBitString(self, val, length):
+        ''' funzione per creare una stringa di bit dato un valore (val) con 
+        lunghezza specificata (length) '''
+        bitString = format(val, '0'+length+'b')
+        return bitString
+
     def compress(self, file_path, flag_v = False):
         '''
         Metodo per la compressione di un file, prende in input il path al file
@@ -87,22 +93,26 @@ class LzwCompressor():
                     p = dictionary[s]
                     counter += 1
                     dictionary[sc] = counter
-                    nbytes = math.ceil(self.__lg(counter)/8)
-                    fout.write(p.to_bytes(nbytes, 'big'))   
+                    ndigits = str(self.__lg(counter))
+                    bitString = self.__createBitString(p, ndigits)
+                    fout.write(bitString)   
                     s = c
                     sc = None 
             #se l'ultima combinazione di caratteri è una già nel dizionario, devo scriverla sul file
             if sc != None:  
                 p = dictionary[sc]
-                fout.write(p.to_bytes(nbytes, 'big')) 
+                ndigits = str(self.__lg(counter))
+                bitString = self.__createBitString(p, ndigits)
+                fout.write(bitString)  
         except:
             fout.close()
             if not file_path.endswith('.Z'):
                     os.remove(compress_file_name)
             raise exc3.ValueError
         end = dictionary['END']
-        nbytes = math.ceil(self.__lg(counter)/8)
-        fout.write(end.to_bytes(nbytes, 'big'))
+        ndigits = str(self.__lg(counter))
+        bitString = self.__createBitString(end, ndigits)
+        fout.write(bitString)  
         fout.close()
         if not self.__debugMode: 
             new_size = os.path.getsize(compress_file_name)
