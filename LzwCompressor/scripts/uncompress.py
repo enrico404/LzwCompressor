@@ -28,8 +28,8 @@ def uncompress_r(file_name, uncompressor):
     if os.path.isfile(file_name):
         #se ho compresso con successso rimuovo i file non compressi
         if uncompressor.uncompress(file_name):
-            if not file_name.endswith('.txt'):
-                os.remove(file_name)
+            #if not file_name.endswith('.txt'):
+            os.remove(file_name)
     else: 
         files = os.listdir(file_name)
         os.chdir(file_name)
@@ -58,6 +58,8 @@ if __name__ == "__main__":
     if flag_h == True:
         print("SYNOPSIS:")
         print("uncompress.py [-r] [ -h ] [file ...]")
+        print("-r : modalità di operamento ricorsiva (per directory)")
+
     elif flag_r == True:
         origin_path = os.getcwd()
         for f in arguments:
@@ -65,8 +67,8 @@ if __name__ == "__main__":
             uncompress_r(f, uncompressor)
     else: 
         if uncompressor.uncompress(arguments[0]):
-            if not arguments[0].endswith('.txt'):
-                os.remove(arguments[0])
+            #if not arguments[0].endswith('.txt'):
+            os.remove(arguments[0])
             
 
         

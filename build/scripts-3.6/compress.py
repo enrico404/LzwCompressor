@@ -33,8 +33,8 @@ def compress_r(file_name, compressor, flag_v):
         #se ho compresso con successso rimuovo i file non compressi
         print("comprimo: ",file_name, "...")
         if compressor.compress(file_name, flag_v):
-            if not file_name.endswith('.Z'):
-                os.remove(file_name)
+            #if not file_name.endswith('.Z'):
+            os.remove(file_name)
     else: 
         files = os.listdir(file_name)
         os.chdir(file_name)
@@ -71,7 +71,11 @@ if __name__ == "__main__":
 
     if flag_h == True:
         print("SYNOPSIS:")
-        print("compress.py [ -v ] [ -r ] [ -h ] [file ...]")
+        print("compress.py [ -v ] [ -r ] [file ...]")
+        print(" -v : modalità verbose \n -r : modalità di operamento" \
+            " ricorsiva (per directory)")
+   
+   
     elif flag_r == True:
         origin_path = os.getcwd()
         for f in arguments:
@@ -80,8 +84,8 @@ if __name__ == "__main__":
     else: 
         
         if compressor.compress(arguments[0], flag_v) :
-            if not arguments[0].endswith('.Z'):
-                os.remove(arguments[0])
+            #if not arguments[0].endswith('.Z'):
+            os.remove(arguments[0])
             
 
         
