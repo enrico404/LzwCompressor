@@ -19,7 +19,7 @@ class LzwCompressor():
     dispone inoltre di un metodo aggiuntivo 'lg' per il calcolo del numero 
     di bit minimo necessario per scrivere il dato nel file
     '''
-    def __init__(self, debug = False): 
+    def __init__(self, debug=False):
         self.input_file = []
         self.__debugMode = debug
         self.dict_initial_size = 256
@@ -51,7 +51,6 @@ class LzwCompressor():
         dictionary = {chr(i): i for i in range(self.dict_initial_size)}
         dictionary['END'] = self.dict_initial_size
         self.input_file.clear()
-        flag_enc = False
         #provo prima ad aprirlo come file testuale, se genera eccezione vuol dire che
         #è un altro tipo di file e lo apro in modalità binaria
         try:
@@ -83,7 +82,7 @@ class LzwCompressor():
         #Algoritmo principale per la compressione del file. Ad ogni ciclo vedo se il carattere o la sequenza
         #di caratteri è già presente nel dizionario oppure no. Se è presente nel dizionario vado a prendere 
         #il carattere sucessivo da codificare e lo appendo alla sequenza, altrimenti vado ad aggiungere la nuova 
-        #sequenza al dizionario e scrivo il codice nel file compresso, relativo alla sequenza precedente di cui possiedo il codice
+        #sequenza al dizionario e scrivo il codice nel file compresso relativo alla sequenza precedente di cui possiedo il codice
         s = ''
         try:
             for c in self.input_file:
@@ -97,9 +96,9 @@ class LzwCompressor():
                     nbytes = math.ceil(self.__lg(counter)/8)
                     fout.write(p.to_bytes(nbytes, 'big'))   
                     s = c
-                    sc = None 
+                    sc = ''
             #se l'ultima combinazione di caratteri è una già nel dizionario devo scriverla sul file
-            if sc != None:  
+            if sc != '':
                 p = dictionary[sc]
                 fout.write(p.to_bytes(nbytes, 'big')) 
         except:
@@ -145,7 +144,7 @@ class LzwCompressor():
         Per la decompressione l'unica informazione da conoscere in partenza è la dimensione del 
         dizionario utilizzato per la compressione.
         '''
-        counter = self.dict_initial_size +1
+        counter = self.dict_initial_size + 1
         
         #in questo caso ho il dizionario invertito, la chiave è il codice
         dictionary = {i: chr(i) for i in range(self.dict_initial_size)}
@@ -215,10 +214,8 @@ class LzwCompressor():
                 self.input_file.append(val)
                 j = k    
             #scrivo il carattere di end file
-            fdcomp.write(ord(dictionary[self.dict_initial_size]).to_bytes(1,'big'))
+            #fdcomp.write(ord(dictionary[self.dict_initial_size]).to_bytes(1,'big'))
             fdcomp.close()
             
             return True
         return False
-                
-    

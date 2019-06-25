@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 import sys
@@ -86,4 +86,9 @@ if __name__ == "__main__":
         if compressor.compress(arguments[0], flag_v) :
             #if not arguments[0].endswith('.Z'):
             os.remove(arguments[0])
+            
 
+        
+
+
+    
