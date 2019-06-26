@@ -53,18 +53,22 @@ class LzwCompressor():
         self.input_file.clear()
         #provo prima ad aprirlo come file testuale, se genera eccezione vuol dire che
         #è un altro tipo di file e lo apro in modalità binaria
-        try:
-            with open(file_path, 'r', 'latin-1') as f:
-                data = f.read()
-            for i in data:
-                self.input_file.append(i)
-        except:
-            with open(file_path, 'rb') as f:
-                data = f.read()
-            for i in data:
-                #nel caso il file sia aperto in modalità binaria, di ogni byte letto ne
-                # prendo la rappresentazione carattere, che serve per comodità all'algoritmo
-                self.input_file.append(chr(i))
+        # try:
+        #     with open(file_path, 'r', encoding='latin-1') as f:
+        #         data = f.read()
+        #     for i in data:
+        #         self.input_file.append(i)
+        # except:
+
+
+        # il file viene aperto in modalità binaria, così posso comprimere qualsiasi tipo di file, poichè sto
+        # comprimendo i bytes
+        with open(file_path, 'rb') as f:
+            data = f.read()
+        for i in data:
+            #nel caso il file sia aperto in modalità binaria, di ogni byte letto ne
+            # prendo la rappresentazione carattere, che serve per comodità all'algoritmo
+            self.input_file.append(chr(i))
             
    
         #appendo alla fine del nome l'estenzione '.Z'
@@ -96,11 +100,15 @@ class LzwCompressor():
                     nbytes = math.ceil(self.__lg(counter)/8)
                     fout.write(p.to_bytes(nbytes, 'big'))   
                     s = c
-                    sc = ''
+                    sc = None
             #se l'ultima combinazione di caratteri è una già nel dizionario devo scriverla sul file
-            if sc != '':
+            if sc != None:
                 p = dictionary[sc]
-                fout.write(p.to_bytes(nbytes, 'big')) 
+                fout.write(p.to_bytes(nbytes, 'big'))
+            #altrimenti devo scrivere l'ultimo carattere che non ho ancora scritto
+            else:
+                p = dictionary[s]
+                fout.write(p.to_bytes(nbytes, 'big'))
         except:
             fout.close()
             #la compressione non è avvenuta con successo, rimuovo il file compresso che si trova in una

@@ -72,6 +72,9 @@ if __name__ == "__main__":
     if flag_h == True:
         print("SYNOPSIS:")
         print("compress.py [ -v ] [ -r ] [file ...]")
+        print("DESCRIZIONE: ")
+        print("Compressore lossless che implementa l'algoritmo ideato da Lempel, Ziv e Welch.")
+        print("")
         print(" -v : modalità verbose \n -r : modalità di operamento" \
             " ricorsiva (per directory)")
    
@@ -86,9 +89,4 @@ if __name__ == "__main__":
         if compressor.compress(arguments[0], flag_v) :
             #if not arguments[0].endswith('.Z'):
             os.remove(arguments[0])
-            
 
-        
-
-
-    

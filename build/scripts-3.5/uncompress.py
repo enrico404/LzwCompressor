@@ -58,6 +58,9 @@ if __name__ == "__main__":
     if flag_h == True:
         print("SYNOPSIS:")
         print("uncompress.py [-r] [ -h ] [file ...]")
+        print("DESCRIZIONE: ")
+        print("Decompressore di un file compresso con il compressore Lempel-Ziv-Welch")
+        print("")
         print("-r : modalità di operamento ricorsiva (per directory)")
 
     elif flag_r == True:
